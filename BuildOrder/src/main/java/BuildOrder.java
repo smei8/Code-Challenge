@@ -26,29 +26,27 @@ public class BuildOrder {
 
 	public void built(int project, char[][] projects, Set<Character> tempMark, Set<Character> permMark,
 			List<Character> result) {
-
+		
+		//if the node already has a tempMark then it will result in a cycle so it should throw an error
 		if (tempMark.contains(project))
 			throw new RuntimeErrorException(null);
-
+		
+		//if the node does not have a permMark
 		if (!permMark.contains(project)) {
+			//then we can add a permMark
 			tempMark.add((char) project);
-
+			
+			//iterate through any dependencies if any
 			for (int i : projects[project]) {
+				//recursive called on the dependencies
 				built(i, projects, tempMark, permMark, result);
 			}
-			permMark.add((char) project);
-			tempMark.remove(project);
-			result.add((char) project);
+			
+			permMark.add((char) project);	//adds the node to permMark	
+			tempMark.remove(project);		//remove the same node from tempMark
+			result.add((char) project);		//adds to result 
 		}
 	}
-
-	public static void main(String[] args) {
-
-		// String[] projects = new String[] {'a', 'b', 'c', 'd', 'e', 'f'};
-		char[][] dependencies = new char[][] { { 'a', 'd' }, { 'f', 'b' }, { 'b', 'd' }, { 'f', 'a' }, { 'd', 'c' } };
-
-		BuildOrder order = new BuildOrder();
-		System.out.println(order.findBuildOrder(dependencies));
-
-	}
 }
+
+	
